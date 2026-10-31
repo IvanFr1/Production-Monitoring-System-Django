@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -137,4 +138,10 @@ MAILERS = {
     'default': {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
+}
+
+UNFOLD = {
+    "SITE_TITLE": "Administration Panel",
+    "SITE_HEADER": "PMS Administration",
+    "SITE_SYMBOL": "manufacturing",
 }

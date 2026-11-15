@@ -34,14 +34,6 @@ class MouldAdmin(ModelAdmin):
     )
 
     
-    def get_readonly_fields(self, request, obj=None):
-        if obj is not None:
-            return ("initial_closures", "total_closures")
-
-        return ("total_closures",)
-
-
-    
     fieldsets = (
         (
             "General Information",

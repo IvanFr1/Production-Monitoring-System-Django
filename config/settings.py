@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -140,8 +141,30 @@ MAILERS = {
     },
 }
 
+
 UNFOLD = {
     "SITE_TITLE": "Administration Panel",
     "SITE_HEADER": "PMS Administration",
     "SITE_SYMBOL": "manufacturing",
+
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": "Production",
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": "Пресс-формы",
+                        "icon": "precision_manufacturing",
+                        "link": reverse_lazy(
+                            "admin:moulds_mould_changelist"
+                        ),
+                    },
+                ],
+            },
+        ],
+    },
 }
+

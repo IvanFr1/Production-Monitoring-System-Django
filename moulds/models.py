@@ -233,5 +233,18 @@ class Mould(models.Model):
     def save(self, *args, **kwargs):
         if self._state.adding:
             self.total_closures = self.initial_closures
+
+        else:
+            old_mould = type(self).objects.get(pk=self.pk)
+
+            difference = (
+                self.initial_closures - old_mould.initial_closures
+            )
+
+            self.total_closures = (
+                old_mould.total_closures + difference
+            )
+
         super().save(*args, **kwargs)
+
 

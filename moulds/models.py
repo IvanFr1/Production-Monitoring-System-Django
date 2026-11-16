@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 
 # Create your models here.
 
@@ -231,20 +231,35 @@ class Mould(models.Model):
         
          
     def save(self, *args, **kwargs):
-        if self._state.adding:
-            self.total_closures = self.initial_closures
+        with transaction.atomic():
+            if self._state.adding:
+                self.total_closures = self.initial_closures
 
-        else:
-            old_mould = type(self).objects.get(pk=self.pk)
+            else:
+                old_mould = (
+                    type(self).objects
+                    .select_for_update()
+                    .get(pk=self.pk)
+                )
 
-            difference = (
-                self.initial_closures - old_mould.initial_closures
-            )
+                difference = (
+                    self.initial_closures
+                    - old_mould.initial_closures
+                )
 
-            self.total_closures = (
-                old_mould.total_closures + difference
-            )
+                self.total_closures = (
+                    old_mould.total_closures + difference
+                )
 
-        super().save(*args, **kwargs)
+                if kwargs.get("update_fields") is not None:
+                    update_fields = set(kwargs["update_fields"])
+
+                    if "initial_closures" in update_fields:
+                        update_fields.add("total_closures")
+
+                    kwargs["update_fields"] = update_fields
+
+            super().save(*args, **kwargs)
+
 
 
